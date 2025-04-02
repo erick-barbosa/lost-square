@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,12 +6,23 @@ using UnityEngine.SceneManagement;
 public class GameHandler: MonoBehaviour {
     public static GameHandler instance;
     [SerializeField] private GameObject gameoverMenu;
-    [SerializeField] private TextMeshProUGUI startOrContinueText;
+
     private bool hasSave;
     private bool isOnMenu;
     [SerializeField] private bool testing;
 
+    public event Action OnSetup;
+
     public bool IsOnMenu { get => isOnMenu; set => isOnMenu = value; }
+    public bool HasSave { get => hasSave; set => hasSave = value; }
+
+    private void OnEnable() {
+        SceneManager.sceneLoaded += OnMenuSceneLoaded;
+    }
+
+    private void OnDisable() {
+        SceneManager.sceneLoaded -= OnMenuSceneLoaded;
+    }
 
     private void Awake() {
         IsOnMenu = SceneManager.GetActiveScene().name == "MainMenu";
@@ -19,10 +31,10 @@ public class GameHandler: MonoBehaviour {
             PlayerPrefs.DeleteAll();
         }
 
+
         // Singleton Pattern
         if (instance == null) {
             instance = this;
-            SetupObject();
             DontDestroyOnLoad(gameObject);
         }
         else if (instance != this) {
@@ -30,30 +42,18 @@ public class GameHandler: MonoBehaviour {
         }
     }
 
-    private void OnChangeToMenu() {
-        if (hasSave) {
-            if (startOrContinueText) {
-                startOrContinueText.text = "Continue";
-            }
-        }
-        else {
-            if (startOrContinueText) {
-                startOrContinueText.text = "Play";
-            }
-        }
-
-        gameoverMenu.SetActive(false);
-        IsOnMenu = true;
-    }
+    
 
     private void SetupObject() {
         GetComponent<Canvas>().worldCamera = Camera.main;
 
-        hasSave = PlayerPrefs.HasKey("save");
-
-        OnChangeToMenu();
+        HasSave = PlayerPrefs.HasKey("save");
+        
 
         gameoverMenu.SetActive(false);
+        IsOnMenu = true;
+
+        OnSetup?.Invoke();
     }
 
     // Reinicia a fase atual
@@ -93,24 +93,32 @@ public class GameHandler: MonoBehaviour {
 
     // Finaliza o jogo
     public void FinishGame() {
-        Debug.Log("Parabéns! Você terminou o jogo!");
         gameoverMenu.SetActive(true);
     }
     
     // Finaliza o jogo
     public void StartOrContinueGame() {
-        /*if (hasSave) {
+        if (HasSave) {
             ContinueGame();
         }
-        else {*/
+        else {
             StartGame();
-        //}
+        }
 
         IsOnMenu = false;
     }
 
     public void BackToMenu() {
         SceneManager.LoadScene("MainMenu");
-        OnChangeToMenu();
+    }
+
+    private void OnMenuSceneLoaded(Scene scene, LoadSceneMode mode) {
+        if (scene.name == "MainMenu") {
+            SetupObject();
+        }
+    }
+
+    public void OpenLevelMenu() {
+        print("level menu");
     }
 }

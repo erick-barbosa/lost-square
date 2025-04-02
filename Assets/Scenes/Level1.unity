@@ -255,6 +255,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 887b382128038ca45bb5351e7198a443, type: 3}
+--- !u!4 &849094913 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 610794070192871669, guid: 887b382128038ca45bb5351e7198a443, type: 3}
+  m_PrefabInstance: {fileID: 849094912}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1140821965
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveAction: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   speed: 25
-  startPos: {fileID: 1744058370}
+  startPos: {fileID: 849094913}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -508,11 +513,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1744058370 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6004226100161618644, guid: 887b382128038ca45bb5351e7198a443, type: 3}
-  m_PrefabInstance: {fileID: 849094912}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1813728062
 GameObject:
   m_ObjectHideFlags: 0
