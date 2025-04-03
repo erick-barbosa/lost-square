@@ -115,6 +115,8 @@ public class GameHandler: MonoBehaviour {
     private void OnMenuSceneLoaded(Scene scene, LoadSceneMode mode) {
         if (scene.name == "MainMenu") {
             SetupObject();
+        } else {
+            SaveGame();
         }
     }
 
