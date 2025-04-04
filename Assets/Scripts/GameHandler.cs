@@ -1,5 +1,4 @@
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -64,11 +63,36 @@ public class GameHandler: MonoBehaviour {
     // Troca para a próxima fase
     public void NextLevel() {
         int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings) {
+        if (HasNextLevel(nextSceneIndex)) {
             SceneManager.LoadScene(nextSceneIndex);
         }
         else {
             FinishGame();
+        }
+    }
+
+    private bool HasNextLevel(int index) {
+        if (index >= SceneManager.sceneCountInBuildSettings) {
+            return false;
+        }
+
+        string nextScenePath = SceneUtility.GetScenePathByBuildIndex(index);
+        if (string.IsNullOrEmpty(nextScenePath)) {
+            return false;
+        }
+
+        string nextSceneName = System.IO.Path.GetFileNameWithoutExtension(nextScenePath);
+        if (nextSceneName == "LevelMenu") {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Troca para a próxima fase
+    public void LoadLevel(int index) {
+        if (index < SceneManager.sceneCountInBuildSettings) {
+            SceneManager.LoadScene(index);
         }
     }
 
@@ -121,6 +145,6 @@ public class GameHandler: MonoBehaviour {
     }
 
     public void OpenLevelMenu() {
-        print("level menu");
+        SceneManager.LoadScene("LevelMenu");
     }
 }
