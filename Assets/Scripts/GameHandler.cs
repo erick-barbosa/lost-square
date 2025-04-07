@@ -1,10 +1,14 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameHandler: MonoBehaviour {
     public static GameHandler instance;
     [SerializeField] private GameObject gameoverMenu;
+    [SerializeField] private TextMeshProUGUI levelIndicator;
+    [SerializeField] private Button backToMenuButton;
 
     private bool hasSave;
     private bool isOnMenu;
@@ -17,6 +21,7 @@ public class GameHandler: MonoBehaviour {
 
     private void OnEnable() {
         SceneManager.sceneLoaded += OnMenuSceneLoaded;
+        backToMenuButton.onClick.AddListener(BackToMenu);
     }
 
     private void OnDisable() {
@@ -118,6 +123,7 @@ public class GameHandler: MonoBehaviour {
     // Finaliza o jogo
     public void FinishGame() {
         gameoverMenu.SetActive(true);
+        ChangeLevelInfoVisibility(false);
     }
     
     // Finaliza o jogo
@@ -138,10 +144,21 @@ public class GameHandler: MonoBehaviour {
 
     private void OnMenuSceneLoaded(Scene scene, LoadSceneMode mode) {
         if (scene.name == "MainMenu") {
+            ChangeLevelInfoVisibility(false);
+
             SetupObject();
         } else {
+            if (scene.name != "LevelMenu") {
+                ChangeLevelInfoVisibility(true);
+            }
+            levelIndicator.text = "Lvl " + SceneManager.GetActiveScene().buildIndex;
             SaveGame();
         }
+    }
+
+    private void ChangeLevelInfoVisibility(bool visibility) {
+        levelIndicator.gameObject.SetActive(visibility);
+        backToMenuButton.gameObject.SetActive(visibility);
     }
 
     public void OpenLevelMenu() {
